@@ -36,6 +36,10 @@ git clone https://github.com/your-username/ai-driven-safe-ride-assist.git
 - **HTML5:** Semantic structure for the split-screen simulator.
 - **Vanilla CSS3:** Advanced UI rendering, glassmorphism design, and custom keyframe animations.
 - **JavaScript (Vanilla):** The core State Machine powering the automated timers, transitions, and logging. 
-
+## Team
+-Mallishwari Dandike(@Mallishwari07)
+-Gagana Keerthika Yamcham(@gagana215)
+-Nivasini Bhukya(@nivasini33)
+-Manisha Maram(@Manisha77-debug)
 ---
 *Built with ❤️ for a safer riding experience.*
