@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Safe Ride Assist System</title>
+    <!-- Modern Typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome styling via CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="system-container">
+        
+        <!-- ============================== -->
+        <!--  ADMIN / SYSTEM CONTROL PANEL  -->
+        <!-- ============================== -->
+        <main class="dashboard panel pane-left">
+            <header class="dashboard-header">
+                <h1>Safe Ride Assist <span class="badge">AI Core</span></h1>
+                <p>Real-time backend monitoring & simulation control panel.</p>
+            </header>
+            
+            <div class="simulator-controls glass">
+                <h2><i class="fa-solid fa-sliders"></i> Simulation Triggers</h2>
+                <div class="grid-controls">
+                    <!-- Stage 1 -->
+                    <button id="btn-stop-detection" class="btn btn-primary">
+                        <i class="fa-solid fa-car-burst"></i> 1. Simulate Sudden Stop
+                    </button>
+                    <!-- Stage 2 / 3 -->
+                    <button id="btn-rider-timeout" class="btn btn-warning" disabled>
+                        <i class="fa-solid fa-hourglass-end"></i> 2. Simulate Rider Timeout (No Response)
+                    </button>
+                    <!-- Stage 4 / 5 -->
+                    <button id="btn-rider-unsafe" class="btn btn-danger" disabled>
+                        <i class="fa-solid fa-phone-slash"></i> 3. Call: Rider indicates danger
+                    </button>
+                    <!-- Stage 6 / 7 -->
+                    <button id="btn-driver-suspicious" class="btn btn-danger" disabled>
+                        <i class="fa-solid fa-user-secret"></i> 4. Call Info: Driver Suspicious
+                    </button>
+                    <button id="btn-driver-no-response" class="btn btn-danger" disabled>
+                        <i class="fa-solid fa-location-dot"></i> 4. Escalation: Driver No Answer
+                    </button>
+                </div>
+                <div class="reset-wrapper">
+                    <button id="btn-reset" class="btn btn-secondary">
+                        <i class="fa-solid fa-rotate-left"></i> Reset System State
+                    </button>
+                </div>
+            </div>
+
+            <!-- System Logs Console -->
+            <div class="system-logs glass">
+                <div class="log-header">
+                    <span><i class="fa-solid fa-terminal"></i> Backend Event Log</span>
+                    <span class="status-indicator live"></span>
+                </div>
+                <div id="log-output" class="log-output">
+                    <!-- Logs injected via JS -->
+                </div>
+            </div>
+        </main>
+
+        <!-- ============================== -->
+        <!--        RIDER APP VIEW          -->
+        <!-- ============================== -->
+        <aside class="app-simulation pane-right">
+            <div class="phone-frame">
+                <div class="notch"></div>
+                <div class="app-screen">
+                    <!-- Map Background -->
+                    <div class="map-layer">
+                        <div class="route-line"></div>
+                        <div id="car-marker" class="marker car-marker">
+                            <i class="fa-solid fa-motorcycle"></i>
+                        </div>
+                        <div id="dispatch-layer"></div>
+                    </div>
+
+                    <!-- App UI Overlay -->
+                    <div class="app-header">
+                        <i class="fa-solid fa-bars"></i>
+                        <span>Rapido Assist</span>
+                        <div class="sos-pill active" id="sos-pill">
+                            <span class="pulse"></span> Monitoring
+                        </div>
+                    </div>
+
+                    <div class="ride-card" id="ride-info">
+                        <h3>Drop-off: <span>Central Park</span></h3>
+                        <p class="driver-info">
+                            <img src="https://ui-avatars.com/api/?name=John+D&background=0D8ABC&color=fff&rounded=true" alt="driver">
+                            <span>John D. • MP09-AB-1234</span>
+                        </p>
+                    </div>
+
+                    <!-- Dynamic Modals / Overlays injected here by JS -->
+                    <div id="safety-modal" class="safety-modal hidden">
+                        <div class="modal-content glass-dark">
+                            <div class="warning-icon">
+                                <i class="fa-solid fa-triangle-exclamation fa-beat"></i>
+                            </div>
+                            <h3>Are you safe?</h3>
+                            <p>We noticed your ride has stopped unexpectedly for over a minute.</p>
+                            <div class="modal-actions">
+                                <button id="btn-app-safe" class="btn-app app-safe">YES, I'm safe</button>
+                                <button id="btn-app-help" class="btn-app app-danger">NO, Need Help!</button>
+                            </div>
+                            <div class="timer-bar">
+                                <div id="modal-timer-fill" class="timer-fill"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Incoming Call Overlay -->
+                    <div id="incoming-call-overlay" class="incoming-call-overlay hidden">
+                        <div class="incoming-caller-info">
+                            <div class="call-icon"><i class="fa-solid fa-phone-volume fa-shake"></i></div>
+                            <h2>Support Team</h2>
+                            <p>Incoming Call...</p>
+                        </div>
+                        <div class="call-actions">
+                            <button id="btn-call-decline" class="btn-app app-danger"><i class="fa-solid fa-phone-slash"></i></button>
+                            <button id="btn-call-answer" class="btn-app app-safe"><i class="fa-solid fa-phone"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- Driver Call Simulation Overlay -->
+                    <div id="driver-call-overlay" class="incoming-call-overlay hidden">
+                        <div class="incoming-caller-info">
+                            <div class="call-icon" style="background: var(--warning); box-shadow: 0 0 30px rgba(245, 158, 11, 0.5);">
+                                <i class="fa-solid fa-headset fa-shake"></i>
+                            </div>
+                            <h2>Calling Driver</h2>
+                            <p>John D. (MP09-AB-1234)</p>
+                        </div>
+                        <div class="call-actions" style="flex-direction: column; gap: 15px; padding: 0 30px; text-align: center;">
+                            <div style="color: var(--warning); font-size: 1.1rem; animation: pulse 1.5s infinite;">Awaiting connection...</div>
+                        </div>
+                    </div>
+
+                    <!-- Full screen Emergency Overlay -->
+                    <div id="emergency-overlay" class="emergency-overlay hidden">
+                        <div class="siren"><i class="fa-solid fa-bell-concierge fa-shake"></i></div>
+                        <h2>EMERGENCY ACTIVATED</h2>
+                        <p>Live tracking shared with emergency contacts & local authorities.</p>
+                        <p class="countdown">Help is arriving in <br><span>3 mins</span></p>
+                    </div>
+
+                </div>
+            </div>
+        </aside>
+
+    </div>
+
+    <!-- Main Logic -->
+    <script src="app.js"></script>
+</body>
+</html>
